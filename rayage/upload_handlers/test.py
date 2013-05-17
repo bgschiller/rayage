@@ -46,7 +46,7 @@ def test_upload_handler(request_handler):
                             if namelist[0].split('/')[0] != test_dir_prefix:
                                 raise Exception("All test files must be contained in a single directory within the zip file.")
                         
-                        zfile.extractall(TEMPLATES_DIR)
+                        zfile.extractall(TESTS_DIR)
                         
                         TestStoreHandler.on_change(test_dir_prefix, 'create')
         except Exception, e:

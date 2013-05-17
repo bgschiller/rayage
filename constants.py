@@ -19,6 +19,7 @@ else:
 DATA_DIR = STUDENTS_DIR = "./data"
 STUDENTS_DIR = "./data/students"
 TEMPLATES_DIR = "./data/templates"
+TESTS_DIR = "./data/tests"
 TRASH_DIR = "./data/trash"
 ASSIGNMENTS_DIR = "./data/assignments"
 

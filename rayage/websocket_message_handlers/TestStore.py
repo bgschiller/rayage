@@ -26,8 +26,8 @@ class TestStoreHandler(DojoWebsocketJsonStoreHandler):
         
     def query(self, socket_connection, message, count, start, dojo_sort, dojo_query):
     
-        test_list = [{'id': t, 'label': t} for t in os.listdir(TEMPLATES_DIR) 
-                                           if os.path.isdir(os.path.join(TEMPLATES_DIR, t))]
+        test_list = [{'id': t, 'label': t} for t in os.listdir(TESTS_DIR) 
+                                           if os.path.isdir(os.path.join(TESTS_DIR, t))]
             
         test_count = len(test_list)
             
