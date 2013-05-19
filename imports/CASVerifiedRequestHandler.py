@@ -24,6 +24,12 @@ class CASVerifiedRequestHandler(tornado.web.RequestHandler):
         return self.get_secure_cookie("user")
         
     def logout_user(self):
+        spoofing_user = self.get_secure_cookie("spoofing_user")
+        if spoofing_user is not None:
+            self.clear_cookie("spoofing_user")
+            self.set_secure_cookie("user", spoofing_user)
+            self.redirect(SERVICE_URL, permanent=False)
+            return
         self.clear_cookie("user")
         self.redirect(CAS_SERVER + "/cas/logout", permanent=False)
         

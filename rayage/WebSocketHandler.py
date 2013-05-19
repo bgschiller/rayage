@@ -142,13 +142,33 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
                          'target': target}
         self.write_message(json.dumps(redirection))
 
+    def _logged_in_as_label(self):
+        username_to_display = self.get_secure_cookie("user")
+        spoofing_as = None
+        spoofing_user = self.get_secure_cookie("spoofing_user")
+
+        if spoofing_user is not None:
+            spoofing_as = username_to_display
+            username_to_display = spoofing_user
+        
+        label = "logged in as {}".format(username_to_display)
+        if spoofing_as is not None:
+            label += ", spoofing as {}".format(spoofing_as)
+        return label
+
     def open(self):
         self.subscriptions = []
         
         username = self.get_secure_cookie("user")
-        
+         
         if username is not None:
             self.user = User.get_user(username)
+            label = self._logged_in_as_label()
+            label_message = {
+                    'type':'username_displayed',
+                    'label':label
+                    }
+            self.write_message(json.dumps(label_message))
             
             if self.user is not None:
                 # Check if "new" user and create a project dir for them if needed.

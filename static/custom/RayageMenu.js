@@ -63,6 +63,11 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
                 //this.setFunctionalityGroups(["user"], "disabled", false);
                 //this.setFunctionalityGroups(["project"], "disabled", true);
                 //this.setFunctionalityGroups(["file"], "disabled", true);
+
+                //subscribe to username_displayed topic
+                topic.subscribe("ws/message/username_displayed", function(data) {
+                    self.username_displayed.innerHTML = data.label;
+                });
             },
             
             // Recursively searches the menu structure and applies each function in functions on each node.

@@ -12,7 +12,7 @@ console.log = function() {
 	        title: 'console.log',
 	        text: [].slice.apply(console_log_arguments).join(" "),
 	        icon: 'rayage_icon rayage_icon_console',
-	        delay: 2000
+	        delay: 20
         });
     });
                    
