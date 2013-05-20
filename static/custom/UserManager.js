@@ -97,6 +97,9 @@ define(["dojo/_base/declare","dijit/_Widget", "dijit/_TemplatedMixin", "dijit/_W
                     
                     if (selection_count == 1) this.edit_button.set("disabled", false);
                     else this.edit_button.set("disabled", true);
+
+                    if (selection_count == 1) this.spoof_button.set("disabled", false);
+                    else this.spoof_button.set("disabled", true);
                 });
                 
                 on(grid, "dgrid-select", function(event){
@@ -107,7 +110,7 @@ define(["dojo/_base/declare","dijit/_Widget", "dijit/_TemplatedMixin", "dijit/_W
                     on_selection_changed(event);
                 });
                 
-                // Connect up the toobar buttons
+                // Connect up the toolbar buttons
                 on(this.add_button, "click", lang.hitch(this, function() {
                     this.user_dialog.addUser();
                 }));
@@ -133,6 +136,19 @@ define(["dojo/_base/declare","dijit/_Widget", "dijit/_TemplatedMixin", "dijit/_W
                     }
                     
                     if (to_delete.length >= 1) this.confirm_delete_dialog.display(to_delete.length);
+                }));
+
+                
+                on(this.spoof_button, "click", lang.hitch(this, function() {
+                    for (var id in grid.selection) {
+                        if (grid.selection[id]) {
+                            var user = grid.row(id).data;
+                            window.location = '/fake_user/' + user.username;
+                            break;
+                        }
+                    }
+ 
+                  
                 }));
                 
                 // Connect up the confirm delete dialog events
