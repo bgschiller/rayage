@@ -8,6 +8,10 @@ define(["dojo/_base/declare","dijit/_WidgetBase", "dijit/_TemplatedMixin", "dojo
             
             _focused: false,
             
+            clear_contents: function() {
+                dojo.empty(this.outputNode);
+            },
+
             focus_terminal: function() {
                 this.clipboardNode.focus();
             },
@@ -50,7 +54,11 @@ define(["dojo/_base/declare","dijit/_WidgetBase", "dijit/_TemplatedMixin", "dojo
             },
             
             format_output_data: function(data) {
-                return data.replace(/\r\n/g, "<br>").replace(/\n/g, "<br>").replace(/\r/g, "<br>").replace(/ /g, "&nbsp;")
+                if (typeof data === "object"){
+                    return "<span class=\"judgement."+data.judgement+"\">" + 
+                    this.format_output_data(data.content) + "</span>";
+                }
+                return data.replace(/\r\n/g, "<br>").replace(/\n/g, "<br>").replace(/\r/g, "<br>").replace(/ /g, "&nbsp;");
             },  
             
             outputErrLine: function(data) {

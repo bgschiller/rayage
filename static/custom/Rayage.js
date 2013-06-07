@@ -311,9 +311,19 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
                 topic.subscribe("ws/message/run_stdout_data", function(data) {
                     self.output_terminal.outputOutLine(data.data);
                 });
+
                 
                 topic.subscribe("ws/message/run_stderr_data", function(data) {
                     self.output_terminal.outputErrLine(data.data);
+                });
+
+                topic.subscribe("ws/message/test_results", function(data) {
+                    //this.output_tests.clear_contents();
+                    for (var i=0, len=data.lines.length; i < len; i++){
+                        self.output_tests.outputOutLine(data.lines[i]);    
+                    }
+                    self.choose_test_dialog.hide();
+                    this.output_tests.focus_terminal();
                 });
 
                 topic.subscribe("ws/message/project_list", function(data) {
