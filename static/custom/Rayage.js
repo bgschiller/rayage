@@ -16,7 +16,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
         "dojo/topic", "custom/SingletonWebsocket", "dijit/layout/ContentPane", "custom/debounce", "dojo/on", "dojo/dom-attr", "dojo/dom-construct", 
         "dojo/_base/unload", 
         "dijit/layout/BorderContainer", "custom/RayageMenu", "dijit/layout/TabContainer", "dijit/layout/ContentPane", "custom/BasicTerminal",
-        "custom/RayageNewProjectDialog", "custom/RayageOpenProjectDialog", "custom/RayageChooseTestDialog", "custom/RayageNewFileDialog", "custom/RayageDisconnectedDialog",
+        "custom/RayageNewProjectDialog", "custom/RayageChooseTestDialog", "custom/RayageOpenProjectDialog", "custom/RayageNewFileDialog", "custom/RayageDisconnectedDialog",
         "custom/RayageSubmitProjectDialog"],
     function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, template, 
              topic, SingletonWebsocket, ContentPane, debounce, on, domAttr, domConstruct,
@@ -253,6 +253,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
                     
                     self.new_project_dialog.hide();
                     self.open_project_dialog.hide();
+                    self.choose_test_dialog.hide();
                     
                     self.main_menu.setFunctionalityGroups(["user"], "disabled", false);
                     self.main_menu.setFunctionalityGroups(["project"], "disabled", false);
@@ -265,6 +266,10 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
 
                 topic.subscribe("ui/dialogs/open_project/open", function(data) {
                     SingletonWebsocket.send({"type": "open_project_request", 'id': data});
+                });
+
+                topic.subscribe("ui/dialogs/choose_test/run", function(data) {
+                    SingletonWebsocket.send({"type" : "run_test_request", "test": data});
                 });
 
                 topic.subscribe("ui/menus/build", function() {
@@ -332,14 +337,14 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
                 });
 
                 topic.subscribe("ws/message/test_list", function(data) {
-                    self.open_project_dialog.setSelections(data.projects);
+                    self.choose_test_dialog.setSelections(data.tests);
 
                     // Toggle Project List form between projects and no projects state
                     var run = self.choose_test_dialog.run_button;
-                    var selection = self.open_project_dialog.project_select;
-                    if (data.projects.length < 1) {
+                    var selection = self.choose_test_dialog.test_select;
+                    if (data.tests.length < 1) {
                         // Add a no projects option and disable open and select elements.
-                        selection.addOption({ label: "No Projects", value: "" });
+                        selection.addOption({ label: "No Tests", value: "" });
                         selection.set('disabled', true);
                         run.set('disabled', true);
                     } else {
