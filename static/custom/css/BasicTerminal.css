@@ -67,3 +67,11 @@
 .terminal a:hover {
     color: red;
 }
+
+.judgement-bad {
+    color: red;
+}
+
+.judgement-good {
+    color: green;
+}

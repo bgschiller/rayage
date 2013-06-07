@@ -55,7 +55,7 @@ define(["dojo/_base/declare","dijit/_WidgetBase", "dijit/_TemplatedMixin", "dojo
             
             format_output_data: function(data) {
                 if (typeof data === "object"){
-                    return "<span class=\"judgement."+data.judgement+"\">" + 
+                    return "<span class=\"judgement judgement-"+data.judgement+"\">" + 
                     this.format_output_data(data.content) + "</span>";
                 }
                 return data.replace(/\r\n/g, "<br>").replace(/\n/g, "<br>").replace(/\r/g, "<br>").replace(/ /g, "&nbsp;");
