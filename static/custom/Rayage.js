@@ -16,7 +16,7 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
         "dojo/topic", "custom/SingletonWebsocket", "dijit/layout/ContentPane", "custom/debounce", "dojo/on", "dojo/dom-attr", "dojo/dom-construct", 
         "dojo/_base/unload", 
         "dijit/layout/BorderContainer", "custom/RayageMenu", "dijit/layout/TabContainer", "dijit/layout/ContentPane", "custom/BasicTerminal",
-        "custom/RayageNewProjectDialog", "custom/RayageOpenProjectDialog", "custom/RayageNewFileDialog", "custom/RayageDisconnectedDialog",
+        "custom/RayageNewProjectDialog", "custom/RayageOpenProjectDialog", "custom/RayageChooseTestDialog", "custom/RayageNewFileDialog", "custom/RayageDisconnectedDialog",
         "custom/RayageSubmitProjectDialog"],
     function(declare, WidgetBase, TemplatedMixin, WidgetsInTemplateMixin, template, 
              topic, SingletonWebsocket, ContentPane, debounce, on, domAttr, domConstruct,
@@ -294,6 +294,10 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
                     var args = self.main_menu.run_arguments_input.value;
                     SingletonWebsocket.send({"type": "run_project_request", "args": args});
                 });
+
+                topic.subscribe("ui/menus/test", function() {
+                    SingletonWebsocket.send({"type": "test_list_request"});
+                });
                 
                 on(self.output_terminal, "inputLine", function(evt){
                     SingletonWebsocket.send({"type": "run_stdin_data", "data": evt.data});
@@ -325,6 +329,26 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
                     }
 
                     self.open_project_dialog.show();
+                });
+
+                topic.subscribe("ws/message/test_list", function(data) {
+                    self.open_project_dialog.setSelections(data.projects);
+
+                    // Toggle Project List form between projects and no projects state
+                    var run = self.choose_test_dialog.run_button;
+                    var selection = self.open_project_dialog.project_select;
+                    if (data.projects.length < 1) {
+                        // Add a no projects option and disable open and select elements.
+                        selection.addOption({ label: "No Projects", value: "" });
+                        selection.set('disabled', true);
+                        run.set('disabled', true);
+                    } else {
+                        // If there are projects then enable the open and select elements.
+                        selection.set('disabled', false);
+                        run.set('disabled', false);
+                    }
+
+                    self.choose_test_dialog.show();
                 });
 
                 topic.subscribe("ui/editor/state_change", function(delay) {

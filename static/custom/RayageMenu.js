@@ -67,6 +67,12 @@ define(["dojo/_base/declare", "dijit/_WidgetBase", "dijit/_TemplatedMixin", "dij
                 //subscribe to username_displayed topic
                 topic.subscribe("ws/message/username_displayed", function(data) {
                     self.username_displayed.innerHTML = data.label;
+                    if (data.label.search("spoofing as") != -1){
+                        self.logout_label.innerHTML = "Stop Spoofing";
+                    }
+                    else {
+                        self.logout_label.innerHTML = "Logout";
+                    }
                 });
             },
             
